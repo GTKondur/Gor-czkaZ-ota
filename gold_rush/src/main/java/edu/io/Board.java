@@ -13,6 +13,19 @@ public class Board {
         return grid[y][x];
     }
 
+    public void placeToken(int x, int y, Token token) {
+        grid[y][x] = token;
+    }
+
+
+    public void clean() {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                grid[x][y] = new Token("・");
+            }
+        }
+    }
+
 
 
 }
