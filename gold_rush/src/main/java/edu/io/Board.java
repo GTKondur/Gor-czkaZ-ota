@@ -9,6 +9,10 @@ public class Board {
         clean();
     }
 
+    public Token square(int x, int y) {
+        return grid[y][x];
+    }
+
 
 
 }
