@@ -1,7 +1,7 @@
 package edu.io;
 
 public class Board {
-    public final int size = 5;
+    public final int size = 8;
     private Token[][] grid;
 
     public Board() {
