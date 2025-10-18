@@ -1,9 +1,10 @@
-package edu.io;
+package edu.io.token;
 
 public class Token {
-    public String label;
+    public final String label;
 
     public Token(String label){
         this.label=label;
     }
+
 }
