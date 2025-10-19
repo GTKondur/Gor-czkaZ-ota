@@ -14,9 +14,7 @@ public class Main {
         PlayerToken player = new PlayerToken(board);
         Token gold = new GoldToken();
 
-
         board.placeToken(4, 3, gold);
-
         board.display();
         Scanner scanner = new Scanner(System.in);
     while (true) {
