@@ -1,5 +1,5 @@
 package edu.io;
-
+import edu.io.token.EmptyToken;
 import edu.io.token.Token;
 
 public class Board {
@@ -23,7 +23,7 @@ public class Board {
     public void clean() {
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                grid[y][x] = new Token("・");
+                grid[y][x] = new EmptyToken();
             }
         }
     }
