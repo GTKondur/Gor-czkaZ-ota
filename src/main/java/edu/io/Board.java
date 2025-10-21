@@ -3,16 +3,12 @@ import edu.io.token.EmptyToken;
 import edu.io.token.Token;
 
 public class Board {
-    public final int size = 8;
+    public static final int size = 8;
     private Token[][] grid;
 
     public Board() {
         grid = new Token[size][size];
         clean();
-    }
-
-    public Token square(int x, int y) {
-        return grid[y][x];
     }
 
     public void placeToken(int x, int y, Token token) {
