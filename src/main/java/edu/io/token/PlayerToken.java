@@ -39,6 +39,11 @@ public class PlayerToken extends Token {
             throw new IllegalArgumentException("Nie możesz wyjść poza plansze!");
 
         }
+
+        Token token= board.peekToken(new_col, new_row);
+        if(token instanceof GoldToken){
+            System.out.println("GOLD!");
+        }
         col = new_col;
         row = new_row;
 

@@ -1,17 +1,18 @@
 package edu.io;
-import edu.io.token.PlayerToken;
-import edu.io.token.GoldToken;
-import edu.io.token.Token;
+import edu.io.token.*;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Game game = new Game();
+        Player player = new Player();
+        game.join(player);
+        game.start();
         Board board = new Board();
 
         board.clean();
 
-        PlayerToken player = new PlayerToken(board);
         Token gold = new GoldToken();
 
         board.placeToken(4, 3, gold);

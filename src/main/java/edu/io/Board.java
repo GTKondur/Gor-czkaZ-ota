@@ -3,16 +3,12 @@ import edu.io.token.EmptyToken;
 import edu.io.token.Token;
 
 public class Board {
-    public final int size = 8;
+    public static final int size = 8;
     private Token[][] grid;
 
     public Board() {
         grid = new Token[size][size];
         clean();
-    }
-
-    public Token square(int x, int y) {
-        return grid[y][x];
     }
 
     public void placeToken(int x, int y, Token token) {
@@ -38,8 +34,8 @@ public class Board {
         }
     }
 
-    public Token peekToken(int col, int row){
-        return grid[row][col];
+    public Token peekToken(int x, int y){
+        return grid[y][x];
     }
 
     public int size(){
@@ -47,4 +43,15 @@ public class Board {
     }
 
     public record Coords(int col, int row){}
+
+    public Coords getAvailableSquare() {
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                if (grid[row][col] instanceof EmptyToken) {
+                    return new Coords(col, row);
+                }
+            }
+        }
+        throw new IllegalStateException("Board is full!");
+    }
 }
