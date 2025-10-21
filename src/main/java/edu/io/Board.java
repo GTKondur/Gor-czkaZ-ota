@@ -32,7 +32,7 @@ public class Board {
 
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                System.out.print(grid[y][x].label + " ");
+                System.out.print(grid[y][x].label() + " ");
             }
             System.out.println();
         }
