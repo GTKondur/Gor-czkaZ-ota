@@ -4,6 +4,10 @@ public class Player {
    private PlayerToken token;
    private double gold;
 
+   public Player(){
+       this.gold= 0.0;
+   }
+
     public Player(PlayerToken token) {
         this.token = token;
     }
@@ -18,4 +22,5 @@ public class Player {
    public double gold(){
         return gold;
    }
+   public double gainGold()
 }
