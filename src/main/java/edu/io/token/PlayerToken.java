@@ -1,15 +1,17 @@
 package edu.io.token;
-
 import edu.io.Board;
+import edu.io.Player;
 
 public class PlayerToken extends Token {
-    private Board board;
+    private final Board board;
+    private final Player player;
     private int col;
     private int row;
 
-    public PlayerToken(Board board) {
+    public PlayerToken(Player player, Board board) {
         super(Label.PLAYER_TOKEN_LABEL);
         this.board= board;
+        this.player = player;
         this.col=0;
         this.row=0;
         board.placeToken(col,row,this);
@@ -40,10 +42,13 @@ public class PlayerToken extends Token {
 
         }
 
-        Token token= board.peekToken(new_col, new_row);
-        if(token instanceof GoldToken){
-            System.out.println("GOLD!");
+        var token = board.peekToken(new_col, new_row);
+
+        if(token instanceof GoldToken gold){
+            player.interactWithToken(token);
         }
+        board.placeToken(col,row, new EmptyToken());
+
         col = new_col;
         row = new_row;
 
