@@ -8,11 +8,16 @@ public class Main {
         Game game = new Game();
         Player player = new Player();
 
+        Token pyrite = new PyriteToken();
+
         Board board = game.getBoard();
         board.clean();
 
         Token gold = new GoldToken();
         board.placeToken(4,4,gold);
+        board.placeToken(2,7,gold);
+        board.placeToken(7,3,gold);
+        board.placeToken(4,6,pyrite);
 
         game.join(player);
         game.start();
