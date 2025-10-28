@@ -1,5 +1,4 @@
 package edu.io;
-
 import edu.io.token.GoldToken;
 import edu.io.token.PlayerToken;
 import edu.io.token.Token;
@@ -31,7 +30,7 @@ public class Player {
 
     public void gainGold(double amonut) {
         if (amonut < 0) {
-            throw new IllegalArgumentException("Cannot gain negative gold ");
+            throw new IllegalArgumentException("Cannot gain negative gold");
         }
         gold += amonut;
     }
