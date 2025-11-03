@@ -18,6 +18,10 @@ public class Gold {
         return amount;
     }
 
+    public String toString() {
+        return String.valueOf(amount);
+    }
+
     public void gain(double value) {
         if (value < 0) {
             throw new IllegalArgumentException("Cannot gain negative gold");

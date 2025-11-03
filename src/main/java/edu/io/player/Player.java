@@ -1,23 +1,16 @@
 package edu.io.player;
 
-import edu.io.token.GoldToken;
-import edu.io.token.PickaxeToken;
-import edu.io.token.PlayerToken;
-import edu.io.token.Token;
+import edu.io.token.*;
 
 public class Player {
-
     private PlayerToken token;
-    public Gold gold = new Gold();
-    private PickaxeToken pickaxe;
+    public final Gold gold = new Gold();
+    private final Shed shed = new Shed();
 
-    public Player() {
-        this.gold = new Gold();
-    }
+    public Player() {}
 
     public Player(PlayerToken token) {
         this.token = token;
-        this.gold = new Gold();
     }
 
     public void assignToken(PlayerToken token) {
@@ -28,25 +21,40 @@ public class Player {
         return token;
     }
 
-
-    public void interactWithToken(Token token) {
-        if (token instanceof GoldToken goldToken) {
-            double amount = goldToken.amount();
-
-
-            if (pickaxe != null && !pickaxe.isBroken()) {
-                amount *= pickaxe.gainFactor();
-                pickaxe.use();
-            }
-
-            gold.gain(amount);
-
-        } else if (token instanceof PickaxeToken pickaxeToken) {
-
-            this.pickaxe = pickaxeToken;
-        }
-    }
     public Gold gold() {
         return gold;
+    }
+
+    public void interactWithToken(Token token) {
+        switch (token) {
+
+            case GoldToken goldToken -> {
+                double amount = goldToken.amount();
+                Tool tool = shed.getTool();
+
+                if (tool instanceof PickaxeToken pickaxe) {
+                    pickaxe.useWith(goldToken)
+                            .ifWorking(() -> gold.gain(amount * pickaxe.gainFactor()))
+                            .ifBroken(() -> {
+                                gold.gain(amount);
+                                shed.dropTool();
+                            });
+                } else {
+                    gold.gain(amount);
+                }
+            }
+
+            case PickaxeToken pickaxeToken -> {
+                shed.add(pickaxeToken);
+            }
+
+            case AnvilToken anvilToken -> {
+                if (shed.getTool() instanceof Repairable tool) {
+                    tool.repair();
+                }
+            }
+
+            default -> { }
+        }
     }
 }

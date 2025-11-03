@@ -1,13 +1,13 @@
 package edu.io.token;
 
-public class PickaxeToken extends Token {
-    private final double gainFactor;
-    private int durability;
-    private State state = State.IDLE;
+import edu.io.player.Repairable;
+import edu.io.player.Tool;
 
-    private enum State {
-        WORKING, BROKEN, IDLE
-    }
+public class PickaxeToken extends Token implements Tool, Repairable {
+    private final double gainFactor;
+    private final int maxDurability;
+    private int durability;
+    private Token withToken = new EmptyToken();
 
     public PickaxeToken() {
         this(1.5, 3);
@@ -19,14 +19,11 @@ public class PickaxeToken extends Token {
 
     public PickaxeToken(double gainFactor, int durability) {
         super(Label.PICKAXE_TOKEN_LABEL);
-        if (gainFactor <= 0) {
-            throw new IllegalArgumentException("Gain factor must be positive");
-        }
-        if (durability <= 0) {
-            throw new IllegalArgumentException("Durability must be positive");
-        }
+        if (gainFactor <= 0) throw new IllegalArgumentException("gainFactor must be > 0");
+        if (durability <= 0) throw new IllegalArgumentException("durability must be > 0");
         this.gainFactor = gainFactor;
         this.durability = durability;
+        this.maxDurability = durability;
     }
 
     public double gainFactor() {
@@ -37,47 +34,52 @@ public class PickaxeToken extends Token {
         return durability;
     }
 
+    public void use() {
+        if (durability > 0) durability--;
+    }
+
+    @Override
+    public void repair() {
+        this.durability = maxDurability;
+    }
+
+    @Override
     public boolean isBroken() {
         return durability <= 0;
     }
 
-    public void use() {
-        if (!isBroken()) {
-            durability--;
-            if (durability == 0) {
-                state = State.BROKEN;
+    @Override
+    public Tool useWith(Token token) {
+        this.withToken = token;
+        if (token instanceof GoldToken) {
+            if (!isBroken()) {
+                use();
             }
         }
+        return this;
     }
 
-    public PickaxeToken useWith(Token token) {
+    @Override
+    public Tool ifWorking(Runnable action) {
+        if (withToken instanceof GoldToken && !isBroken()) {
+            action.run();
+        }
+        return this;
+    }
+
+    @Override
+    public Tool ifBroken(Runnable action) {
         if (isBroken()) {
-            state = State.BROKEN;
-            return this;
+            action.run();
         }
+        return this;
+    }
 
-        if (token instanceof GoldToken) {
-            use();
-            state = isBroken() ? State.BROKEN : State.WORKING;
-        } else {
-            state = State.IDLE;
+    @Override
+    public Tool ifIdle(Runnable action) {
+        if (!(withToken instanceof GoldToken)) {
+            action.run();
         }
-
-        return this;
-    }
-
-    public PickaxeToken ifWorking(Runnable action) {
-        if (state == State.WORKING) action.run();
-        return this;
-    }
-
-    public PickaxeToken ifBroken(Runnable action) {
-        if (isBroken()) action.run();
-        return this;
-    }
-
-    public PickaxeToken ifIdle(Runnable action) {
-        if (state == State.IDLE) action.run();
         return this;
     }
 }
