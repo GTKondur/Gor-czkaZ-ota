@@ -25,18 +25,25 @@ public class Player {
         return gold;
     }
 
+    public Shed getShed() {
+        return shed;
+    }
+
     public void interactWithToken(Token token) {
         switch (token) {
-
             case GoldToken goldToken -> {
                 double amount = goldToken.amount();
                 Tool tool = shed.getTool();
 
                 if (tool instanceof PickaxeToken pickaxe) {
                     pickaxe.useWith(goldToken)
-                            .ifWorking(() -> gold.gain(amount * pickaxe.gainFactor()))
+                            .ifWorking(() -> {
+                                gold.gain(amount * pickaxe.gainFactor());
+                                System.out.println("You used pickaxe. Durability: " + pickaxe.durability());
+                            })
                             .ifBroken(() -> {
                                 gold.gain(amount);
+                                System.out.println("The pickaxe was destroyed");
                                 shed.dropTool();
                             });
                 } else {
@@ -46,6 +53,7 @@ public class Player {
 
             case PickaxeToken pickaxeToken -> {
                 shed.add(pickaxeToken);
+                System.out.println("You picked up a pickaxe!");
             }
 
             case AnvilToken anvilToken -> {

@@ -17,7 +17,6 @@ public class Shed {
     }
 
     public Tool getTool() {
-
         return tools.isEmpty() ? new NoTool() : tools.peek();
     }
 

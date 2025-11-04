@@ -24,6 +24,6 @@ public class NoTool implements Tool {
 
     @Override
     public boolean isBroken() {
-        return false; // nigdy się nie psuje
+        return false;
     }
 }

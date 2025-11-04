@@ -1,13 +1,14 @@
 package edu.io;
-
+import edu.io.token.PickaxeToken;
 import edu.io.player.Player;
 import edu.io.token.*;
-
+import edu.io.player.Tool;
 import java.util.Scanner;
 
 public class Game {
     private final Board board;
     private Player player;
+
 
     public Game() {
         this.board = new Board();
@@ -33,6 +34,9 @@ public class Game {
 
         Token pickaxe = new PickaxeToken();
         board.placeToken(2, 2, pickaxe);
+
+        Token anvil = new AnvilToken();
+        board.placeToken(7, 2, anvil);
     }
 
     public void start() {
