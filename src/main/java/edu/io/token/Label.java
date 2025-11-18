@@ -6,4 +6,5 @@ public class Label {
     public static final String GOLD_TOKEN_LABEL = "💰︎";
     public static final String PICKAXE_TOKEN_LABEL = "⛏";
     public static final String ANVIL_TOKEN_LABEL = "π";
+    public static final String WATER_TOKEN_LABEL = "\uD83D\uDCA7";
 }

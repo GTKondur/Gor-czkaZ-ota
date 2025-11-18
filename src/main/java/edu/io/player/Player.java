@@ -1,19 +1,27 @@
 package edu.io.player;
 
 import edu.io.token.*;
+import org.jetbrains.annotations.NotNull;
 
 public class Player {
     private PlayerToken token;
     public final Gold gold = new Gold();
     private final Shed shed = new Shed();
+    public final Vitals vitals;
 
-    public Player() {}
+    public Player() {
+        this.vitals = new Vitals();
+    }
 
-    public Player(PlayerToken token) {
+    public Player(@NotNull PlayerToken token) {
+        this();
         this.token = token;
     }
 
-    public void assignToken(PlayerToken token) {
+    public void assignToken(@NotNull PlayerToken token) {
+        if (token == null) {
+            throw new NullPointerException("token cannot be null");
+        }
         this.token = token;
     }
 
@@ -29,21 +37,23 @@ public class Player {
         return shed;
     }
 
-    public void interactWithToken(Token token) {
+    public void interactWithToken(@NotNull Token token) {
+        if (token == null) throw new NullPointerException("token cannot be null");
+        if (!vitals.isAlive()) {throw new IllegalStateException("player is dead");}
+
         switch (token) {
+            case EmptyToken e -> vitals.dehydrate(VitalsValues.DEHYDRATION_MOVE);
+
             case GoldToken goldToken -> {
+                vitals.dehydrate(VitalsValues.DEHYDRATION_GOLD);
+                var tool = shed.getTool();
                 double amount = goldToken.amount();
-                Tool tool = shed.getTool();
 
                 if (tool instanceof PickaxeToken pickaxe) {
                     pickaxe.useWith(goldToken)
-                            .ifWorking(() -> {
-                                gold.gain(amount * pickaxe.gainFactor());
-                                System.out.println("You used pickaxe. Durability: " + pickaxe.durability());
-                            })
+                            .ifWorking(() -> gold.gain(amount * pickaxe.gainFactor()))
                             .ifBroken(() -> {
                                 gold.gain(amount);
-                                System.out.println("The pickaxe was destroyed");
                                 shed.dropTool();
                             });
                 } else {
@@ -51,16 +61,17 @@ public class Player {
                 }
             }
 
-            case PickaxeToken pickaxeToken -> {
-                shed.add(pickaxeToken);
-                System.out.println("You picked up a pickaxe!");
-            }
+            case PickaxeToken pickaxeToken -> shed.add(pickaxeToken);
 
             case AnvilToken anvilToken -> {
-                if (shed.getTool() instanceof Repairable tool) {
-                    tool.repair();
+                var tool = shed.getTool();
+                if (tool instanceof Repairable repairable) {
+                    repairable.repair();
+                    vitals.dehydrate(VitalsValues.DEHYDRATION_ANVIL);
                 }
             }
+
+            case WaterToken waterToken -> vitals.hydrate(waterToken.amount());
 
             default -> { }
         }

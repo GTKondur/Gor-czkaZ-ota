@@ -1,4 +1,5 @@
 package edu.io.token;
+
 import edu.io.Board;
 import edu.io.player.Player;
 
@@ -10,21 +11,26 @@ public class PlayerToken extends Token {
 
     public PlayerToken(Player player, Board board) {
         super(Label.PLAYER_TOKEN_LABEL);
-        this.board= board;
+        if (player == null) throw new NullPointerException("player cannot be null");
+        if (board == null) throw new NullPointerException("board cannot be null");
+        this.board = board;
         this.player = player;
-        this.col=0;
-        this.row=0;
-        board.placeToken(col,row,this);
-    }
-    public Board.Coords pos(){
-        return new Board.Coords(col,row);
+        this.col = 0;
+        this.row = 0;
+        board.placeToken(col, row, this);
     }
 
-    public enum Move{
+    public Board.Coords pos() {
+        return new Board.Coords(col, row);
+    }
+
+    public enum Move {
         NONE, LEFT, RIGHT, UP, DOWN
     }
 
     public void move(Move dir) {
+        if (dir == null) throw new NullPointerException("Move cannot be null");
+
         int new_col = col;
         int new_row = row;
 
@@ -36,25 +42,26 @@ public class PlayerToken extends Token {
             case NONE -> { return; }
         }
 
+
         if (new_col < 0 || new_row < 0 || new_col >= board.size() || new_row >= board.size()) {
             throw new IllegalArgumentException("Cannot move outside of board!");
         }
 
-        var token = board.peekToken(new_col, new_row);
 
-        if (!(token instanceof EmptyToken)) {
-            player.interactWithToken(token);
+        Token tokenAtNewPos = board.peekToken(new_col, new_row);
 
 
-            if (!(token instanceof AnvilToken)) {
-                board.placeToken(new_col, new_row, new EmptyToken());
-            }
+        player.interactWithToken(tokenAtNewPos);
+
+
+        if (!(tokenAtNewPos instanceof AnvilToken)) {
+            board.placeToken(new_col, new_row, new EmptyToken());
         }
+
 
         board.placeToken(col, row, new EmptyToken());
         col = new_col;
         row = new_row;
         board.placeToken(col, row, this);
     }
-
 }

@@ -1,19 +1,16 @@
 package edu.io;
-import edu.io.token.PickaxeToken;
+
 import edu.io.player.Player;
 import edu.io.token.*;
-import edu.io.player.Tool;
 import java.util.Scanner;
 
 public class Game {
     private final Board board;
     private Player player;
 
-
     public Game() {
         this.board = new Board();
     }
-
 
     public void join(Player player) {
         this.player = player;
@@ -24,19 +21,23 @@ public class Game {
     public void setupBoard() {
         board.clean();
 
+        // Gold tokens
         Token gold = new GoldToken();
         board.placeToken(4, 4, gold);
         board.placeToken(2, 7, gold);
         board.placeToken(7, 3, gold);
 
+
         Token pyrite = new PyriteToken();
         board.placeToken(4, 6, pyrite);
+
 
         Token pickaxe = new PickaxeToken();
         board.placeToken(2, 2, pickaxe);
 
+
         Token anvil = new AnvilToken();
-        board.placeToken(7, 2, anvil);
+        board.placeToken(4, 5, anvil);
     }
 
     public void start() {
@@ -45,6 +46,11 @@ public class Game {
     }
 
     public void run() {
+        if (player == null) {
+            System.err.println("Brak gracza! Najpierw wywołaj join(player).");
+            return;
+        }
+
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -61,9 +67,13 @@ public class Game {
 
                 board.display();
                 System.out.println("Gold amount: " + player.gold().amount());
+                System.out.println("Hydration: " + player.vitals.hydration() + "/100");
 
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                System.err.println("Nie możesz wyjść poza planszę!");
+            } catch (IllegalStateException e) {
+                System.err.println("Umierasz! Brak wody.");
+                break;
             }
         }
     }
