@@ -8,7 +8,7 @@ public class Main {
         Player player = new Player();
 
         player.vitals.setOnDeathHandler(() -> {
-            System.out.println("To koniec: pełne odwodnienie.");
+            System.out.println("To koniec: pełne odwodnienie");
         });
 
         game.setupBoard();
