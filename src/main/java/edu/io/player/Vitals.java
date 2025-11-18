@@ -1,11 +1,11 @@
 package edu.io.player;
 
 import org.jetbrains.annotations.NotNull;
-
+import java.util.Objects;
 public class Vitals {
 
     private int hydration;
-    private Runnable onDeathCallback;
+    public Runnable onDeathCallback;
 
     public Vitals() {
         hydration = 100;
@@ -37,12 +37,8 @@ public class Vitals {
     }
 
     @NotNull
-    public Runnable setOnDeathHandler(@NotNull Runnable callback) {
-        if (callback == null) {
-            throw new NullPointerException("callback cannot be null");
-        }
-        Runnable prev = this.onDeathCallback;
-        this.onDeathCallback = callback;
-        return prev;
+    public void setOnDeathHandler(@NotNull Runnable callback) {
+        this.onDeathCallback = Objects.requireNonNull(callback, "callback cannot be null");
     }
+
 }

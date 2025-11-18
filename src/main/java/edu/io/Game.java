@@ -21,7 +21,6 @@ public class Game {
     public void setupBoard() {
         board.clean();
 
-        // Gold tokens
         Token gold = new GoldToken();
         board.placeToken(4, 4, gold);
         board.placeToken(2, 7, gold);
@@ -38,6 +37,9 @@ public class Game {
 
         Token anvil = new AnvilToken();
         board.placeToken(4, 5, anvil);
+
+        Token water = new WaterToken();
+        board.placeToken(4, 2, water);
     }
 
     public void start() {
@@ -46,10 +48,6 @@ public class Game {
     }
 
     public void run() {
-        if (player == null) {
-            System.err.println("Brak gracza! Najpierw wywołaj join(player).");
-            return;
-        }
 
         Scanner scanner = new Scanner(System.in);
 
@@ -70,9 +68,9 @@ public class Game {
                 System.out.println("Hydration: " + player.vitals.hydration() + "/100");
 
             } catch (IllegalArgumentException e) {
-                System.err.println("Nie możesz wyjść poza planszę!");
+                System.err.println("You cannot get outside of this board!");
             } catch (IllegalStateException e) {
-                System.err.println("Umierasz! Brak wody.");
+                System.err.println("You died");
                 break;
             }
         }

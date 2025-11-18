@@ -15,13 +15,12 @@ public class Player {
 
     public Player(@NotNull PlayerToken token) {
         this();
+        if (token == null) throw new NullPointerException("token cannot be null");
         this.token = token;
     }
 
     public void assignToken(@NotNull PlayerToken token) {
-        if (token == null) {
-            throw new NullPointerException("token cannot be null");
-        }
+        if (token == null) throw new NullPointerException("token cannot be null");
         this.token = token;
     }
 
@@ -39,7 +38,12 @@ public class Player {
 
     public void interactWithToken(@NotNull Token token) {
         if (token == null) throw new NullPointerException("token cannot be null");
-        if (!vitals.isAlive()) {throw new IllegalStateException("player is dead");}
+
+
+        if (!vitals.isAlive()) {
+            vitals.onDeathCallback.run();
+            throw new IllegalStateException("player is dead");
+        }
 
         switch (token) {
             case EmptyToken e -> vitals.dehydrate(VitalsValues.DEHYDRATION_MOVE);
